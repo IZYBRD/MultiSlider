@@ -282,7 +282,15 @@ extension MultiSlider {
     }
 
     func updateTrackViewCornerRounding() {
-        trackView.layer.cornerRadius = hasRoundTrackEnds ? trackWidth / 2 : 1
+        if hasRoundTrackEnds {
+            if trackCornerRadius > 0 {
+                trackView.layer.cornerRadius = trackCornerRadius
+            } else {
+                trackView.layer.cornerRadius = trackWidth / 2
+            }
+        } else {
+            trackView.layer.cornerRadius = 1
+        }
         outerTrackViews.forEach { $0.layer.cornerRadius = trackView.layer.cornerRadius }
     }
 }

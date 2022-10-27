@@ -174,6 +174,12 @@ open class MultiSlider: UIControl {
         }
     }
 
+    @IBInspectable public dynamic var trackCornerRadius: CGFloat = 1 {
+        didSet {
+            updateTrackViewCornerRounding()
+        }
+    }
+
     /// minimal distance to keep between thumbs (half a thumb by default)
     @IBInspectable public dynamic var distanceBetweenThumbs: CGFloat = -1
 
@@ -220,13 +226,16 @@ open class MultiSlider: UIControl {
     @objc open var minimumView = UIImageView()
     @objc open var maximumView = UIImageView()
 
+    open lazy var defaultThumbImage: UIImage? = .circle() {
+        didSet { thumbImage = defaultThumbImage; setup() }
+    }
+
     // MARK: - Internals
 
     let slideView = UIView()
     let panGestureView = UIView()
     let margin: CGFloat = 32
     var isSettingValue = false
-    lazy var defaultThumbImage: UIImage? = .circle()
     var selectionFeedbackGenerator = AvailableHapticFeedback()
 
     // MARK: - Overrides

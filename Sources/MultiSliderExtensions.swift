@@ -193,7 +193,7 @@ extension CACornerMask {
     }
 }
 
-extension UIImage {
+public extension UIImage {
     static func circle(diameter: CGFloat = 29, width: CGFloat = 0.5, color: UIColor? = UIColor.lightGray.withAlphaComponent(0.5), fill: UIColor? = .white) -> UIImage? {
         let circleLayer = CAShapeLayer()
         circleLayer.fillColor = fill?.cgColor
@@ -202,6 +202,24 @@ extension UIImage {
         let margin = width * 2
         let circle = UIBezierPath(ovalIn: CGRect(x: margin, y: margin, width: diameter, height: diameter))
         circleLayer.bounds = CGRect(x: 0, y: 0, width: diameter + margin * 2, height: diameter + margin * 2)
+        circleLayer.path = circle.cgPath
+        UIGraphicsBeginImageContextWithOptions(circleLayer.bounds.size, false, 0)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        circleLayer.render(in: context)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
+    }
+
+    static func roundedRect(width: CGFloat, height: CGFloat, borderWidth: CGFloat = 0.5, cornerRadii: CGFloat = 3, color: UIColor? = UIColor.lightGray.withAlphaComponent(0.5), fill: UIColor? = .white) -> UIImage? {
+        let circleLayer = CAShapeLayer()
+        circleLayer.fillColor = fill?.cgColor
+        circleLayer.strokeColor = color?.cgColor
+        circleLayer.lineWidth = borderWidth
+        let margin = borderWidth * 2
+        let circle = UIBezierPath(roundedRect: CGRect(x: margin, y: margin, width: width, height: height),
+                                  byRoundingCorners: .allCorners, cornerRadii: .init(width: cornerRadii, height: cornerRadii))
+        circleLayer.bounds = CGRect(x: 0, y: 0, width: width + margin * 2, height: height + margin * 2)
         circleLayer.path = circle.cgPath
         UIGraphicsBeginImageContextWithOptions(circleLayer.bounds.size, false, 0)
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
